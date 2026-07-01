@@ -1,104 +1,106 @@
 # GitHub Actions — Microtech Computers CRM
 
-Two workflows are configured in `.github/workflows/`:
+Three files live in `.github/workflows/`:
 
-| File | Runs on | What it does |
+| Workflow | Runs on | What it does |
 |---|---|---|
-| **`build-windows-exe.yml`** | `windows-latest` | Builds `MicrotechCRM.exe`, smoke-tests it, uploads it as an artifact, and attaches it to a GitHub Release when you push a tag. |
-| **`ci.yml`** | `ubuntu-latest` | Fast sanity check — installs backend + frontend deps and builds them. Catches syntax/import errors early. |
+| **`build-windows-exe.yml`** | `windows-latest`, `ubuntu-latest`, `macos-latest` (matrix) | Builds `MicrotechCRM.exe` **for all 3 OSes** in parallel, smoke-tests each, uploads them as artifacts, and attaches to a GitHub Release on tag pushes. |
+| **`ci.yml`** | `ubuntu-latest` | Lint + import-check for Python, ESLint + prod build for React, plus a live API smoke-test (starts uvicorn, curls `/api/health`, logs in, hits `/api/dashboard/stats`). |
 
 ---
 
-## How to enable them
+## 1. Getting your binaries
 
-### 1. Push your code to GitHub
+### On every push (temporary artifacts, 30-day retention)
+Repo → **Actions** tab → click the latest `Build MicrotechCRM binaries` run → scroll to **Artifacts**:
+- `MicrotechCRM-windows-<sha>.zip` → contains `MicrotechCRM-windows.exe`
+- `MicrotechCRM-linux-<sha>.zip`   → contains `MicrotechCRM-linux`  (make it executable with `chmod +x`)
+- `MicrotechCRM-macos-<sha>.zip`   → contains `MicrotechCRM-macos`
 
-Use the **"Save to Github"** button in the Emergent chat toolbar (bottom-left of your chat input) — it will create/update a repo for you. The `.github/workflows/` folder is included automatically.
-
-> If you'd rather do it manually:
-> ```bash
-> git remote add origin https://github.com/<you>/microtech-crm.git
-> git push -u origin main
-> ```
-
-### 2. That's it
-
-The moment your first push lands on `main`, GitHub Actions will start running both workflows. You'll see them under the **Actions** tab of your repo.
-
----
-
-## Getting your `MicrotechCRM.exe`
-
-### Every push (temporary artifact)
-
-1. Go to **Actions** tab → click the latest `Build MicrotechCRM.exe (Windows)` run.
-2. Scroll to **Artifacts** → download `MicrotechCRM-<sha>.zip`.
-3. Unzip → double-click `MicrotechCRM.exe`. Done.
-4. Artifacts are kept for 30 days.
-
-### Official release (permanent, shareable link)
-
-Tag a commit and push the tag:
-
+### Publishing a release (permanent, shareable URLs)
 ```bash
 git tag v1.0.0
 git push origin v1.0.0
 ```
+All three binaries are automatically attached to the auto-generated GitHub Release at `github.com/<you>/<repo>/releases`.
 
-The workflow will build the exe, create a **GitHub Release** at `https://github.com/<you>/microtech-crm/releases`, and attach `MicrotechCRM.exe` to it. You can share the direct download link with anyone.
-
-### Manual build without pushing code
-
-Repo → **Actions** tab → **Build MicrotechCRM.exe (Windows)** on the left → click **Run workflow** button in the top-right of the run list → pick branch → Run. Done in ~5-8 minutes.
+### Manual build
+Repo → **Actions** → workflow name → **Run workflow** dropdown → pick branch → **Run**.
 
 ---
 
-## What the Windows workflow actually does
+## 2. What the matrix build actually does
+
+For **each** OS in parallel:
 
 ```
 checkout code
-  → setup Python 3.11
-  → setup Node 20
-  → yarn install + yarn build   (with REACT_APP_BACKEND_URL empty for relative /api)
-  → pip install requirements + pyinstaller
-  → pyinstaller MicrotechCRM.spec
-  → START the exe + curl /api/health + /api/auth/login → verify it works
-  → upload dist\MicrotechCRM.exe as artifact
-  → if pushed a tag: also attach it to the GitHub Release
+  ↓
+setup Python 3.11 + Node 20 (with dep caching)
+  ↓
+yarn install + yarn build   (REACT_APP_BACKEND_URL="" → uses relative /api)
+  ↓
+pip install requirements + pyinstaller
+  ↓
+pyinstaller MicrotechCRM.spec
+  ↓
+smoke-test the binary  (start → curl /api/health → login → kill)
+  ↓
+[Windows only, if signing cert present] signtool sign
+  ↓
+rename artifact → upload → attach to release (on tags)
 ```
 
-It's literally an automated version of running `build_exe.bat` on your own Windows PC — but running on GitHub's free Windows runners.
+Total time: ~6-10 min per OS, all running in parallel.
 
 ---
 
-## Cost
+## 3. Enabling optional Windows code-signing
 
-For **public** repos: **completely free**, unlimited minutes.
-For **private** repos: 2,000 free Windows-minutes/month (Windows runners cost 2× minutes). A single build ≈ 6–10 minutes, so ~30–50 free builds/month.
+Windows Defender & SmartScreen love to flag unsigned PyInstaller exes. To sign your builds:
+
+1. **Get a code-signing certificate** (e.g. from Sectigo, DigiCert, SSL.com — around $200-$400/year for OV, more for EV).
+2. Export the cert as a `.pfx` file with a password.
+3. Convert to base64 and store as GitHub secrets:
+   ```bash
+   base64 -w 0 mycert.pfx > cert.b64
+   ```
+4. In your repo → **Settings → Secrets and variables → Actions → New repository secret**:
+   - `WINDOWS_CERT_PFX_BASE64` → paste the contents of `cert.b64`
+   - `WINDOWS_CERT_PASSWORD` → the cert's password
+5. Done. Next Windows build will auto-sign the exe (the signing step in the workflow is conditional — it silently skips if the secrets aren't set).
 
 ---
 
-## Troubleshooting
+## 4. CI details
+
+The `ci.yml` workflow is your fast feedback loop (~2-3 min):
+
+- **Ruff lint** on `backend/` (non-blocking — reports warnings but doesn't fail the build)
+- **`python -c "import server"`** — catches syntax errors, missing imports, `.env` issues
+- **Live API smoke test** — spins up uvicorn, seeds DB, curls `/api/health`, logs in as admin, hits a protected endpoint
+- **ESLint** on `frontend/src/` (non-blocking initially)
+- **`yarn build`** — catches JS syntax errors + broken imports
+
+To make the linters **blocking**, remove the `|| true` at the end of the lint steps.
+
+---
+
+## 5. Enabling the workflows
+
+1. Push to GitHub via the **"Save to Github"** button in the Emergent chat toolbar (bottom-left of the message input). The `.github/` folder is included automatically.
+2. First push → GitHub Actions kicks in immediately.
+3. Cost: **free for public repos**; private repos get 2,000 free Linux-minutes and 500 Windows-minutes/month.
+
+---
+
+## 6. Troubleshooting
 
 | Problem | Fix |
 |---|---|
-| Workflow doesn't appear | Make sure `.github/workflows/` was pushed. Check under repo → Actions → *"I understand my workflows, go ahead and enable them"*. |
-| `pyinstaller` fails on Windows runner | Check the run logs — usually a missing hidden import. Add it to `hiddenimports` in `MicrotechCRM.spec`. |
-| `yarn build` warning-as-error | Already handled — workflow sets `CI=false`. |
-| Release step 403 | GitHub token permissions. Go to repo → Settings → Actions → General → Workflow permissions → *Read and write permissions*. |
-| Windows Defender flags the .exe | Common with PyInstaller onefile builds. Either add an exclusion, or code-sign the exe (needs a paid cert). |
-
----
-
-## Extending: also build Linux/macOS
-
-You can add more matrix entries in `build-windows-exe.yml`:
-
-```yaml
-strategy:
-  matrix:
-    os: [windows-latest, ubuntu-latest, macos-latest]
-runs-on: ${{ matrix.os }}
-```
-
-PyInstaller will then produce a Linux binary + a macOS `.app` alongside the Windows `.exe`.
+| Workflow doesn't appear | Ensure `.github/workflows/*.yml` was committed and pushed. |
+| Release step returns 403 | Repo → Settings → Actions → General → **Workflow permissions** → *Read and write*. |
+| macOS binary won't run: "cannot verify developer" | Right-click → Open → Open (bypass Gatekeeper), or sign with an Apple Developer ID cert. |
+| Linux binary "permission denied" | `chmod +x MicrotechCRM-linux` after downloading. |
+| Windows Defender flags the exe | Sign it (§3 above), or click "More info → Run anyway". |
+| Workflow takes forever | First run is slow (no cache). Subsequent runs cache pip + yarn = much faster. |

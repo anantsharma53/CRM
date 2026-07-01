@@ -1,9 +1,9 @@
-name: Build MicrotechCRM.exe (Windows)
+name: Build MicrotechCRM binaries (Windows + Linux + macOS)
 
 # When to run:
 #  - Every push to main
 #  - Every PR into main (build only, no release)
-#  - Every tag like v1.0.0 (build + attach to GitHub Release)
+#  - Every tag like v1.0.0 (build + attach all binaries to GitHub Release)
 #  - Manual "Run workflow" button in the Actions tab
 on:
   push:
@@ -14,9 +14,25 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-exe:
-    name: Build Windows .exe
-    runs-on: windows-latest
+  build:
+    name: Build (${{ matrix.name }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            name: windows
+            artifact: MicrotechCRM.exe
+            asset:    MicrotechCRM-windows.exe
+          - os: ubuntu-latest
+            name: linux
+            artifact: MicrotechCRM
+            asset:    MicrotechCRM-linux
+          - os: macos-latest
+            name: macos
+            artifact: MicrotechCRM
+            asset:    MicrotechCRM-macos
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout repository
@@ -44,7 +60,7 @@ jobs:
         working-directory: frontend
         env:
           REACT_APP_BACKEND_URL: ""
-          CI: "false"        # treat warnings as warnings, not errors
+          CI: "false"
         run: yarn build
 
       - name: Install backend + PyInstaller
@@ -53,17 +69,19 @@ jobs:
           pip install -r backend/requirements.txt
           pip install pyinstaller uvicorn
 
-      - name: Build MicrotechCRM.exe with PyInstaller
+      - name: Build binary with PyInstaller
         run: pyinstaller --clean MicrotechCRM.spec
 
-      - name: Smoke-test the built exe (start + curl + kill)
+      # ---------- Windows smoke test ----------
+      - name: Smoke-test the built .exe (Windows only)
+        if: matrix.os == 'windows-latest'
         shell: pwsh
         run: |
           $exe = "dist/MicrotechCRM.exe"
           if (!(Test-Path $exe)) { throw "exe not found" }
           $env:MTC_PORT = "8765"
           $proc = Start-Process -FilePath $exe -PassThru -WindowStyle Hidden
-          Start-Sleep -Seconds 8
+          Start-Sleep -Seconds 10
           try {
             $health = Invoke-RestMethod http://127.0.0.1:8765/api/health
             Write-Host "Health OK: $($health.status)"
@@ -72,22 +90,64 @@ jobs:
               -ContentType 'application/json'
             if (-not $login.access_token) { throw "login failed" }
             Write-Host "Login OK for $($login.user.email) [$($login.user.role)]"
-          } finally {
-            Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
-          }
+          } finally { Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue }
 
-      - name: Upload MicrotechCRM.exe as workflow artifact
+      # ---------- Linux/macOS smoke test ----------
+      - name: Smoke-test the built binary (Linux/macOS)
+        if: matrix.os != 'windows-latest'
+        shell: bash
+        run: |
+          bin="dist/MicrotechCRM"
+          test -x "$bin" || { echo "binary missing"; exit 1; }
+          MTC_PORT=8765 "$bin" > /tmp/smoke.log 2>&1 &
+          pid=$!
+          sleep 10
+          curl -fsS http://127.0.0.1:8765/api/health || { cat /tmp/smoke.log; kill $pid; exit 1; }
+          echo ""
+          tok=$(curl -fsS -X POST http://127.0.0.1:8765/api/auth/login \
+                     -H 'Content-Type: application/json' \
+                     -d '{"email":"admin@mtcedu.co.in","password":"Admin@123"}' \
+                | python3 -c 'import json,sys;print(json.load(sys.stdin)["access_token"])')
+          test -n "$tok" && echo "Login OK"
+          kill $pid || true
+
+      # ---------- Optional: Windows code-signing ----------
+      # Only runs if the two secrets are set: WINDOWS_CERT_PFX_BASE64 + WINDOWS_CERT_PASSWORD.
+      # See .github/README.md for how to add a code-signing cert.
+      - name: Sign MicrotechCRM.exe (only if secrets configured)
+        if: matrix.os == 'windows-latest' && env.WIN_CERT_PFX != ''
+        env:
+          WIN_CERT_PFX: ${{ secrets.WINDOWS_CERT_PFX_BASE64 }}
+          WIN_CERT_PWD: ${{ secrets.WINDOWS_CERT_PASSWORD }}
+        shell: pwsh
+        run: |
+          $pfxBytes = [Convert]::FromBase64String($env:WIN_CERT_PFX)
+          [IO.File]::WriteAllBytes("cert.pfx", $pfxBytes)
+          & "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22621.0/x64/signtool.exe" sign `
+            /f cert.pfx /p $env:WIN_CERT_PWD /tr http://timestamp.digicert.com /td sha256 /fd sha256 `
+            dist/MicrotechCRM.exe
+          Remove-Item cert.pfx -Force
+
+      # ---------- Rename + upload ----------
+      - name: Rename artifact for release
+        shell: bash
+        run: |
+          cd dist
+          mv "${{ matrix.artifact }}" "${{ matrix.asset }}"
+          ls -la
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: MicrotechCRM-${{ github.sha }}
-          path: dist/MicrotechCRM.exe
+          name: MicrotechCRM-${{ matrix.name }}-${{ github.sha }}
+          path: dist/${{ matrix.asset }}
           retention-days: 30
 
-      - name: Attach exe to GitHub Release (only on tags)
+      - name: Attach to GitHub Release (only on tags)
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/MicrotechCRM.exe
+          files: dist/${{ matrix.asset }}
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

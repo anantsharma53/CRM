@@ -1,8 +1,9 @@
 name: CI
 
-# Basic sanity checks on every push/PR:
-#  - Python: install deps, import server module (catches syntax errors + missing deps fast)
-#  - Frontend: install + build (catches JS syntax + missing deps)
+# Runs on every push/PR:
+#   - Backend: lint + import-check
+#   - Frontend: lint + production build
+#   - Backend API smoke test (start server + curl endpoints)
 on:
   push:
     branches: [main]
@@ -10,6 +11,7 @@ on:
     branches: [main]
 
 jobs:
+  # ---------- Backend ----------
   backend:
     name: Backend (Python)
     runs-on: ubuntu-latest
@@ -20,10 +22,16 @@ jobs:
           python-version: "3.11"
           cache: pip
           cache-dependency-path: backend/requirements.txt
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r backend/requirements.txt
+          pip install ruff uvicorn
+
+      - name: Lint with ruff
+        run: ruff check backend/ --output-format=github || true   # non-blocking for now
+
       - name: Import-check server.py
         working-directory: backend
         env:
@@ -31,6 +39,32 @@ jobs:
           JWT_SECRET: "ci-secret"
         run: python -c "import server; print('server module OK — routes:', len(server.app.routes))"
 
+      - name: Start API server + smoke-test endpoints
+        working-directory: backend
+        env:
+          DATABASE_URL: "sqlite:///./ci-smoke.db"
+          JWT_SECRET: "ci-secret"
+        run: |
+          uvicorn server:app --host 127.0.0.1 --port 8765 --log-level warning &
+          SERVER_PID=$!
+          # Wait for server to be ready
+          for i in {1..20}; do
+            curl -fsS http://127.0.0.1:8765/api/health && break
+            sleep 1
+          done
+          echo ""
+          # Login as seeded admin
+          TOK=$(curl -fsS -X POST http://127.0.0.1:8765/api/auth/login \
+                     -H 'Content-Type: application/json' \
+                     -d '{"email":"admin@mtcedu.co.in","password":"Admin@123"}' \
+                | python -c 'import json,sys;print(json.load(sys.stdin)["access_token"])')
+          test -n "$TOK" && echo "Login OK"
+          # Protected endpoint
+          curl -fsS http://127.0.0.1:8765/api/dashboard/stats -H "Authorization: Bearer $TOK" > /dev/null
+          echo "Dashboard OK"
+          kill $SERVER_PID || true
+
+  # ---------- Frontend ----------
   frontend:
     name: Frontend (React)
     runs-on: ubuntu-latest
@@ -41,9 +75,15 @@ jobs:
           node-version: "20"
           cache: yarn
           cache-dependency-path: frontend/yarn.lock
+
       - name: Install dependencies
         working-directory: frontend
         run: yarn install --frozen-lockfile
+
+      - name: Lint (eslint via craco/react-scripts)
+        working-directory: frontend
+        run: yarn eslint src --ext .js,.jsx --max-warnings 100 || true   # non-blocking for now
+
       - name: Build production bundle
         working-directory: frontend
         env:
