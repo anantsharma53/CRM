@@ -43,13 +43,18 @@ export default function AppLayout() {
 
   const drawer = (
     <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <Box sx={{ px: 3, py: 3, borderBottom: "1px solid #1E2A24" }}>
-        <Typography variant="h5" sx={{ color: "#fff", letterSpacing: "-0.02em" }} data-testid="sidebar-brand">
-          Microtech<span style={{ color: "#D26B58" }}> Computers</span>
-        </Typography>
-        <Typography variant="caption" sx={{ color: "#A0AAB2", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-          mtcedu.co.in · Enquiry CRM
-        </Typography>
+      <Box sx={{ px: 3, py: 3, borderBottom: "1px solid #1E2A24", display: "flex", alignItems: "center", gap: 1.5 }}>
+        <Box sx={{ width: 44, height: 44, borderRadius: 1.5, bgcolor: "#000", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", flexShrink: 0 }}>
+          <img src="/brand/microtech-logo.png" alt="Microtech" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+        </Box>
+        <Box>
+          <Typography variant="h6" sx={{ color: "#fff", letterSpacing: "-0.01em", lineHeight: 1.1, fontSize: "1.05rem" }} data-testid="sidebar-brand">
+            Microtech Computers
+          </Typography>
+          <Typography variant="caption" sx={{ color: "#A0AAB2", letterSpacing: "0.08em", textTransform: "uppercase", fontSize: "0.65rem" }}>
+            mtcedu.co.in
+          </Typography>
+        </Box>
       </Box>
       <List sx={{ flex: 1, px: 1.5, py: 2 }}>
         {items.map((item) => {
@@ -156,8 +161,14 @@ export default function AppLayout() {
         </Drawer>
       </Box>
 
-      <Box component="main" sx={{ flex: 1, p: { xs: 2, md: 4 }, width: { md: `calc(100% - ${drawerWidth}px)` }, mt: 8 }}>
-        <Outlet />
+      <Box component="main" sx={{ flex: 1, p: { xs: 2, md: 4 }, width: { md: `calc(100% - ${drawerWidth}px)` }, mt: 8, display: "flex", flexDirection: "column" }}>
+        <Box sx={{ flex: 1 }}>
+          <Outlet />
+        </Box>
+        <Box className="no-print" sx={{ mt: 4, pt: 3, borderTop: "1px solid #E2E8F0", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 1.5, color: "text.secondary", fontSize: 12 }}>
+          <span>© {new Date().getFullYear()} Microtech Computers · Badhi Para, Hill Road, Mihijam, Jamtara, Jharkhand</span>
+          <span>📞 9113788397 · 9308616839 · ✉️ mtcmihijam@gmail.com</span>
+        </Box>
       </Box>
     </Box>
   );

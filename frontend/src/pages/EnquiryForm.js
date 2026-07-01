@@ -67,9 +67,14 @@ export default function EnquiryForm() {
       Object.entries(form).map(([k, v]) => [k, v === "" ? null : v])
     );
     try {
-      if (editing) await api.put(`/enquiries/${id}`, payload);
-      else await api.post("/enquiries", payload);
-      nav("/enquiries");
+      if (editing) {
+        await api.put(`/enquiries/${id}`, payload);
+        nav("/enquiries");
+      } else {
+        const r = await api.post("/enquiries", payload);
+        // Take receptionist straight to the printable receipt
+        nav(`/enquiries/${r.data.id}/receipt`);
+      }
     } catch (err) {
       setError(formatApiError(err.response?.data?.detail));
     } finally { setSaving(false); }

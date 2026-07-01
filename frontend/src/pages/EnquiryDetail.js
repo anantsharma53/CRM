@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import SchoolIcon from "@mui/icons-material/School";
+import PrintIcon from "@mui/icons-material/Print";
 import api, { formatApiError } from "../services/api";
 import { STATUS_OPTIONS, COMM_TYPES, statusColor, priorityColor } from "../utils/constants";
 import { useAuth } from "../context/AuthContext";
@@ -71,7 +72,8 @@ export default function EnquiryDetail() {
             {e.course_name && <Chip size="small" label={e.course_name} variant="outlined" />}
           </Stack>
         </Box>
-        <Stack direction="row" spacing={1.5}>
+        <Stack direction="row" spacing={1.5} flexWrap="wrap">
+          <Button startIcon={<PrintIcon />} variant="outlined" onClick={() => nav(`/enquiries/${e.id}/receipt`)} data-testid="detail-receipt-btn">Print Receipt</Button>
           {hasRole("reception", "admin", "counsellor") && (
             <Button startIcon={<EditIcon />} variant="outlined" onClick={() => nav(`/enquiries/${e.id}/edit`)} data-testid="detail-edit-btn">Edit</Button>
           )}

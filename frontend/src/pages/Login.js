@@ -38,7 +38,12 @@ export default function Login() {
       >
         <Box sx={{ position: "absolute", inset: 0, bgcolor: "rgba(11,16,14,0.55)" }} />
         <Box sx={{ position: "relative", p: 6, color: "#fff", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-          <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: "-0.02em" }}>Microtech<span style={{ color: "#D26B58" }}> Computers</span></Typography>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Box sx={{ width: 60, height: 60, borderRadius: 1.5, bgcolor: "#000", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <img src="/brand/microtech-logo.png" alt="Microtech" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            </Box>
+            <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: "-0.02em" }}>Microtech<span style={{ color: "#D26B58" }}> Computers</span></Typography>
+          </Box>
           <Box>
             <Typography variant="h2" sx={{ mb: 2, letterSpacing: "-0.02em" }}>Where enquiries<br/>become admissions.</Typography>
             <Typography variant="body1" sx={{ opacity: 0.85, maxWidth: 460 }}>

@@ -18,5 +18,7 @@ body {
 *::-webkit-scrollbar-thumb:hover { background: #A0AAB2; }
 
 @media print {
-  nav, header, .MuiDrawer-root, .MuiAppBar-root { display: none !important; }
+  nav, header, .MuiDrawer-root, .MuiAppBar-root, .no-print { display: none !important; }
+  body { background: #fff !important; }
+  main { padding: 0 !important; margin: 0 !important; }
 }
