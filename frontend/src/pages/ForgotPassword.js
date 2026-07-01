@@ -33,8 +33,8 @@ export default function ForgotPassword() {
         {err && <Alert severity="error" sx={{ mb: 2 }}>{err}</Alert>}
         <form onSubmit={submit}>
           <Stack spacing={2}>
-            <TextField label="Email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} inputProps={{ "data-testid": "forgot-email" }} />
-            <TextField label="New password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} inputProps={{ "data-testid": "forgot-password" }} />
+            <TextField label="Email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} slotProps={{ htmlInput: { "data-testid": "forgot-email" } }} />
+            <TextField label="New password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} slotProps={{ htmlInput: { "data-testid": "forgot-password" } }} />
             <Button type="submit" variant="contained" data-testid="forgot-submit">Reset password</Button>
           </Stack>
         </form>

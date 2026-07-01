@@ -83,16 +83,16 @@ export default function EnquiryList() {
             placeholder="Search by name, mobile, email..."
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            InputProps={{ startAdornment: <InputAdornment position="start"><SearchIcon fontSize="small" /></InputAdornment> }}
+            slotProps={{ input: { startAdornment: <InputAdornment position="start"><SearchIcon fontSize="small" /></InputAdornment> } }}
             size="small"
             sx={{ minWidth: 320 }}
-            inputProps={{ "data-testid": "enq-search-input" }}
+            slotProps={{ htmlInput: { "data-testid": "enq-search-input" } }}
           />
           <TextField
             select label="Status" size="small" value={statusF}
             onChange={(e) => setStatusF(e.target.value)}
             sx={{ minWidth: 200 }}
-            SelectProps={{ inputProps: { "data-testid": "enq-status-filter" } }}
+            slotProps={{ htmlInput: { "data-testid": "enq-status-filter" } }}
           >
             <MenuItem value="">All Statuses</MenuItem>
             {STATUS_OPTIONS.map((s) => <MenuItem key={s} value={s}>{s}</MenuItem>)}

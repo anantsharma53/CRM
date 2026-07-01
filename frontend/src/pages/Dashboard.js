@@ -103,42 +103,42 @@ export default function Dashboard() {
       </Box>
 
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} md={3}><StatCard testid="stat-total" icon={<PeopleIcon />} label="Total Enquiries" value={stats.total_enquiries} sub={`${stats.today_enquiries} today`} /></Grid>
-        <Grid item xs={12} sm={6} md={3}><StatCard testid="stat-admissions" icon={<SchoolIcon />} label="Admissions" value={stats.admissions} sub={`${stats.monthly_admissions} this month`} color="#A6422F" /></Grid>
-        <Grid item xs={12} sm={6} md={3}><StatCard testid="stat-pending" icon={<PendingActionsIcon />} label="Pending Follow-ups" value={stats.pending_followups} sub={`${stats.today_followups} due today`} color="#D97736" /></Grid>
-        <Grid item xs={12} sm={6} md={3}><StatCard testid="stat-conversion" icon={<PercentIcon />} label="Conversion Rate" value={`${stats.conversion_rate}%`} sub="enquiry → admission" color="#4F772D" /></Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}><StatCard testid="stat-total" icon={<PeopleIcon />} label="Total Enquiries" value={stats.total_enquiries} sub={`${stats.today_enquiries} today`} /></Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}><StatCard testid="stat-admissions" icon={<SchoolIcon />} label="Admissions" value={stats.admissions} sub={`${stats.monthly_admissions} this month`} color="#A6422F" /></Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}><StatCard testid="stat-pending" icon={<PendingActionsIcon />} label="Pending Follow-ups" value={stats.pending_followups} sub={`${stats.today_followups} due today`} color="#D97736" /></Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}><StatCard testid="stat-conversion" icon={<PercentIcon />} label="Conversion Rate" value={`${stats.conversion_rate}%`} sub="enquiry → admission" color="#4F772D" /></Grid>
 
-        <Grid item xs={12} sm={6} md={3}><StatCard testid="stat-interested" icon={<TrendingUpIcon />} label="Interested" value={stats.interested} color="#4A6FA5" /></Grid>
-        <Grid item xs={12} sm={6} md={3}><StatCard testid="stat-today-followups" icon={<EventIcon />} label="Today's Follow-ups" value={stats.today_followups} color="#132A13" /></Grid>
-        <Grid item xs={12} sm={6} md={3}><StatCard testid="stat-missed" icon={<HourglassBottomIcon />} label="Missed Follow-ups" value={stats.missed_followups} color="#9E2A2B" /></Grid>
-        <Grid item xs={12} sm={6} md={3}><StatCard testid="stat-cancelled" icon={<CancelIcon />} label="Cancelled Leads" value={stats.cancelled_leads} color="#5C6B64" /></Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}><StatCard testid="stat-interested" icon={<TrendingUpIcon />} label="Interested" value={stats.interested} color="#4A6FA5" /></Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}><StatCard testid="stat-today-followups" icon={<EventIcon />} label="Today's Follow-ups" value={stats.today_followups} color="#132A13" /></Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}><StatCard testid="stat-missed" icon={<HourglassBottomIcon />} label="Missed Follow-ups" value={stats.missed_followups} color="#9E2A2B" /></Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}><StatCard testid="stat-cancelled" icon={<CancelIcon />} label="Cancelled Leads" value={stats.cancelled_leads} color="#5C6B64" /></Grid>
 
-        <Grid item xs={12} md={8}>
+        <Grid size={{ xs: 12, md: 8 }}>
           <Card sx={{ p: 3, height: 360 }} data-testid="chart-monthly-enquiries">
             <Typography variant="h5" sx={{ mb: 2 }}>Monthly Enquiries</Typography>
             <Box sx={{ height: 280 }}><Bar data={monthlyData} options={chartOpts} /></Box>
           </Card>
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ p: 3, height: 360 }} data-testid="chart-lead-source">
             <Typography variant="h5" sx={{ mb: 2 }}>Lead Source</Typography>
             <Box sx={{ height: 280 }}>{sourceData.labels.length ? <Doughnut data={sourceData} options={pieOpts} /> : <Empty text="No data" />}</Box>
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <Card sx={{ p: 3, height: 340 }} data-testid="chart-course-wise">
             <Typography variant="h5" sx={{ mb: 2 }}>Course-wise Enquiries</Typography>
             <Box sx={{ height: 260 }}>{courseData.labels.length ? <Pie data={courseData} options={pieOpts} /> : <Empty text="No data" />}</Box>
           </Card>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <Card sx={{ p: 3, height: 340 }} data-testid="chart-counsellor-perf">
             <Typography variant="h5" sx={{ mb: 2 }}>Counsellor Performance</Typography>
             <Box sx={{ height: 260 }}>{counsellorData.labels.length ? <Bar data={counsellorData} options={chartOpts} /> : <Empty text="No data" />}</Box>
           </Card>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Card sx={{ p: 3, height: 320 }} data-testid="chart-admission-trend">
             <Typography variant="h5" sx={{ mb: 2 }}>Admission Trend</Typography>
             <Box sx={{ height: 240 }}><Line data={trendData} options={chartOpts} /></Box>

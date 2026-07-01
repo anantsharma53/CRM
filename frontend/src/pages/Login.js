@@ -68,7 +68,7 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 fullWidth
-                inputProps={{ "data-testid": "login-email-input" }}
+                slotProps={{ htmlInput: { "data-testid": "login-email-input" } }}
               />
               <TextField
                 label="Password"
@@ -77,7 +77,7 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 fullWidth
-                inputProps={{ "data-testid": "login-password-input" }}
+                slotProps={{ htmlInput: { "data-testid": "login-password-input" } }}
               />
               <Button
                 type="submit"

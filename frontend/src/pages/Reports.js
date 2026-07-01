@@ -30,21 +30,21 @@ export default function Reports() {
 
       <Card sx={{ p: 3, mb: 3 }}>
         <Stack direction={{ xs: "column", md: "row" }} spacing={2} alignItems="center">
-          <TextField type="date" label="Start" InputLabelProps={{ shrink: true }} value={start} onChange={(e) => setStart(e.target.value)} inputProps={{ "data-testid": "rep-start" }} />
-          <TextField type="date" label="End" InputLabelProps={{ shrink: true }} value={end} onChange={(e) => setEnd(e.target.value)} inputProps={{ "data-testid": "rep-end" }} />
+          <TextField type="date" label="Start" value={start} onChange={(e) => setStart(e.target.value)} slotProps={{ inputLabel: { shrink: true }, htmlInput: { "data-testid": "rep-start" } }} />
+          <TextField type="date" label="End" value={end} onChange={(e) => setEnd(e.target.value)} slotProps={{ inputLabel: { shrink: true }, htmlInput: { "data-testid": "rep-end" } }} />
           <Button variant="contained" onClick={load} data-testid="rep-apply">Apply</Button>
         </Stack>
       </Card>
 
       {data && (
         <Grid container spacing={3}>
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Card sx={{ p: 3 }}>
               <Typography variant="overline" color="text.secondary">Total Enquiries</Typography>
               <Typography variant="h2">{data.total}</Typography>
             </Card>
           </Grid>
-          <Grid item xs={12} md={8}>
+          <Grid size={{ xs: 12, md: 8 }}>
             <Card sx={{ p: 3 }}>
               <Typography variant="h5" sx={{ mb: 2 }}>Status Breakdown</Typography>
               <Stack direction="row" spacing={1} flexWrap="wrap">
@@ -65,7 +65,7 @@ export default function Reports() {
 }
 
 const ReportSection = ({ title, rows, keyField, onExport, testid }) => (
-  <Grid item xs={12} md={4}>
+  <Grid size={{ xs: 12, md: 4 }}>
     <Card sx={{ p: 3, height: "100%" }} data-testid={testid}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
         <Typography variant="h5">{title}</Typography>

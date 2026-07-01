@@ -92,45 +92,45 @@ export default function EnquiryForm() {
         <Card sx={{ p: 3, mb: 3 }}>
           <SectionTitle>Personal Details</SectionTitle>
           <Grid container spacing={2}>
-            <Grid item xs={12} md={4}><TextField fullWidth required label="Student Name" value={form.student_name} onChange={set("student_name")} inputProps={{ "data-testid": "enq-form-student-name" }} /></Grid>
-            <Grid item xs={12} md={4}><TextField fullWidth label="Father's Name" value={form.father_name} onChange={set("father_name")} /></Grid>
-            <Grid item xs={12} md={4}><TextField fullWidth label="Mother's Name" value={form.mother_name} onChange={set("mother_name")} /></Grid>
-            <Grid item xs={12} md={3}><TextField select fullWidth label="Gender" value={form.gender} onChange={set("gender")}>
+            <Grid size={{ xs: 12, md: 4 }}><TextField fullWidth required label="Student Name" value={form.student_name} onChange={set("student_name")} slotProps={{ htmlInput: { "data-testid": "enq-form-student-name" } }} /></Grid>
+            <Grid size={{ xs: 12, md: 4 }}><TextField fullWidth label="Father's Name" value={form.father_name} onChange={set("father_name")} /></Grid>
+            <Grid size={{ xs: 12, md: 4 }}><TextField fullWidth label="Mother's Name" value={form.mother_name} onChange={set("mother_name")} /></Grid>
+            <Grid size={{ xs: 12, md: 3 }}><TextField select fullWidth label="Gender" value={form.gender} onChange={set("gender")}>
               <MenuItem value="">-</MenuItem>{GENDER_OPTIONS.map((g) => <MenuItem key={g} value={g}>{g}</MenuItem>)}
             </TextField></Grid>
-            <Grid item xs={12} md={3}><TextField fullWidth type="date" label="Date of Birth" InputLabelProps={{ shrink: true }} value={form.dob || ""} onChange={set("dob")} /></Grid>
-            <Grid item xs={12} md={3}><TextField fullWidth label="Mobile" value={form.mobile} onChange={set("mobile")} onBlur={checkMobile} inputProps={{ "data-testid": "enq-form-mobile" }} /></Grid>
-            <Grid item xs={12} md={3}><TextField fullWidth label="WhatsApp" value={form.whatsapp} onChange={set("whatsapp")} /></Grid>
-            <Grid item xs={12} md={6}><TextField fullWidth label="Email" type="email" value={form.email} onChange={set("email")} /></Grid>
-            <Grid item xs={12} md={6}><TextField fullWidth label="Address" value={form.address} onChange={set("address")} /></Grid>
-            <Grid item xs={12} md={4}><TextField fullWidth label="City" value={form.city} onChange={set("city")} /></Grid>
-            <Grid item xs={12} md={4}><TextField fullWidth label="State" value={form.state} onChange={set("state")} /></Grid>
-            <Grid item xs={12} md={4}><TextField fullWidth label="PIN Code" value={form.pincode} onChange={set("pincode")} /></Grid>
+            <Grid size={{ xs: 12, md: 3 }}><TextField fullWidth type="date" label="Date of Birth" slotProps={{ inputLabel: { shrink: true }, htmlInput: { "data-testid": "enq-form-dob" } }} value={form.dob || ""} onChange={set("dob")} /></Grid>
+            <Grid size={{ xs: 12, md: 3 }}><TextField fullWidth label="Mobile" value={form.mobile} onChange={set("mobile")} onBlur={checkMobile} slotProps={{ htmlInput: { "data-testid": "enq-form-mobile" } }} /></Grid>
+            <Grid size={{ xs: 12, md: 3 }}><TextField fullWidth label="WhatsApp" value={form.whatsapp} onChange={set("whatsapp")} /></Grid>
+            <Grid size={{ xs: 12, md: 6 }}><TextField fullWidth label="Email" type="email" value={form.email} onChange={set("email")} /></Grid>
+            <Grid size={{ xs: 12, md: 6 }}><TextField fullWidth label="Address" value={form.address} onChange={set("address")} /></Grid>
+            <Grid size={{ xs: 12, md: 4 }}><TextField fullWidth label="City" value={form.city} onChange={set("city")} /></Grid>
+            <Grid size={{ xs: 12, md: 4 }}><TextField fullWidth label="State" value={form.state} onChange={set("state")} /></Grid>
+            <Grid size={{ xs: 12, md: 4 }}><TextField fullWidth label="PIN Code" value={form.pincode} onChange={set("pincode")} /></Grid>
           </Grid>
         </Card>
 
         <Card sx={{ p: 3, mb: 3 }}>
           <SectionTitle>Academic Details</SectionTitle>
           <Grid container spacing={2}>
-            <Grid item xs={12} md={4}><TextField fullWidth label="Qualification" value={form.qualification} onChange={set("qualification")} /></Grid>
-            <Grid item xs={12} md={4}><TextField fullWidth label="School / College" value={form.school_college} onChange={set("school_college")} /></Grid>
-            <Grid item xs={12} md={4}><TextField fullWidth label="Board / University" value={form.board_university} onChange={set("board_university")} /></Grid>
-            <Grid item xs={12} md={4}><TextField fullWidth label="Passing Year" value={form.passing_year} onChange={set("passing_year")} /></Grid>
-            <Grid item xs={12} md={4}><TextField fullWidth label="Percentage / CGPA" value={form.percentage} onChange={set("percentage")} /></Grid>
+            <Grid size={{ xs: 12, md: 4 }}><TextField fullWidth label="Qualification" value={form.qualification} onChange={set("qualification")} /></Grid>
+            <Grid size={{ xs: 12, md: 4 }}><TextField fullWidth label="School / College" value={form.school_college} onChange={set("school_college")} /></Grid>
+            <Grid size={{ xs: 12, md: 4 }}><TextField fullWidth label="Board / University" value={form.board_university} onChange={set("board_university")} /></Grid>
+            <Grid size={{ xs: 12, md: 4 }}><TextField fullWidth label="Passing Year" value={form.passing_year} onChange={set("passing_year")} /></Grid>
+            <Grid size={{ xs: 12, md: 4 }}><TextField fullWidth label="Percentage / CGPA" value={form.percentage} onChange={set("percentage")} /></Grid>
           </Grid>
         </Card>
 
         <Card sx={{ p: 3, mb: 3 }}>
           <SectionTitle>Course Interest</SectionTitle>
           <Grid container spacing={2}>
-            <Grid item xs={12} md={4}><TextField select fullWidth label="Interested Course" value={form.course_id || ""} onChange={set("course_id")} SelectProps={{ inputProps: { "data-testid": "enq-form-course" } }}>
+            <Grid size={{ xs: 12, md: 4 }}><TextField select fullWidth label="Interested Course" value={form.course_id || ""} onChange={set("course_id")} slotProps={{ htmlInput: { "data-testid": "enq-form-course" } }}>
               <MenuItem value="">-</MenuItem>{courses.map((c) => <MenuItem key={c.id} value={c.id}>{c.name}</MenuItem>)}
             </TextField></Grid>
-            <Grid item xs={12} md={4}><TextField select fullWidth label="Batch" value={form.batch_id || ""} onChange={set("batch_id")}>
+            <Grid size={{ xs: 12, md: 4 }}><TextField select fullWidth label="Batch" value={form.batch_id || ""} onChange={set("batch_id")}>
               <MenuItem value="">-</MenuItem>{filteredBatches.map((b) => <MenuItem key={b.id} value={b.id}>{b.name}</MenuItem>)}
             </TextField></Grid>
-            <Grid item xs={12} md={4}><TextField fullWidth label="Preferred Timing" value={form.preferred_timing} onChange={set("preferred_timing")} /></Grid>
-            <Grid item xs={12} md={4}><TextField select fullWidth label="Mode" value={form.mode} onChange={set("mode")}>
+            <Grid size={{ xs: 12, md: 4 }}><TextField fullWidth label="Preferred Timing" value={form.preferred_timing} onChange={set("preferred_timing")} /></Grid>
+            <Grid size={{ xs: 12, md: 4 }}><TextField select fullWidth label="Mode" value={form.mode} onChange={set("mode")}>
               <MenuItem value="">-</MenuItem>{MODE_OPTIONS.map((m) => <MenuItem key={m} value={m}>{m}</MenuItem>)}
             </TextField></Grid>
           </Grid>
@@ -139,22 +139,22 @@ export default function EnquiryForm() {
         <Card sx={{ p: 3, mb: 3 }}>
           <SectionTitle>Lead & Counselling</SectionTitle>
           <Grid container spacing={2}>
-            <Grid item xs={12} md={4}><TextField select fullWidth label="Lead Source" value={form.lead_source_id || ""} onChange={set("lead_source_id")}>
+            <Grid size={{ xs: 12, md: 4 }}><TextField select fullWidth label="Lead Source" value={form.lead_source_id || ""} onChange={set("lead_source_id")}>
               <MenuItem value="">-</MenuItem>{sources.map((s) => <MenuItem key={s.id} value={s.id}>{s.name}</MenuItem>)}
             </TextField></Grid>
-            <Grid item xs={12} md={4}><TextField fullWidth label="Reference Name" value={form.reference_name} onChange={set("reference_name")} /></Grid>
-            <Grid item xs={12} md={4}><TextField select fullWidth label="Assigned Counsellor" value={form.counsellor_id || ""} onChange={set("counsellor_id")}>
+            <Grid size={{ xs: 12, md: 4 }}><TextField fullWidth label="Reference Name" value={form.reference_name} onChange={set("reference_name")} /></Grid>
+            <Grid size={{ xs: 12, md: 4 }}><TextField select fullWidth label="Assigned Counsellor" value={form.counsellor_id || ""} onChange={set("counsellor_id")}>
               <MenuItem value="">-</MenuItem>{counsellors.map((c) => <MenuItem key={c.id} value={c.id}>{c.full_name}</MenuItem>)}
             </TextField></Grid>
-            <Grid item xs={12} md={3}><TextField fullWidth type="date" label="Enquiry Date" InputLabelProps={{ shrink: true }} value={form.enquiry_date || ""} onChange={set("enquiry_date")} /></Grid>
-            <Grid item xs={12} md={3}><TextField fullWidth type="date" label="Next Follow-up" InputLabelProps={{ shrink: true }} value={form.next_followup_date || ""} onChange={set("next_followup_date")} /></Grid>
-            <Grid item xs={12} md={3}><TextField select fullWidth label="Priority" value={form.priority || "Medium"} onChange={set("priority")}>
+            <Grid size={{ xs: 12, md: 4 }}><TextField fullWidth type="date" label="Enquiry Date" slotProps={{ inputLabel: { shrink: true } }} value={form.enquiry_date || ""} onChange={set("enquiry_date")} /></Grid>
+            <Grid size={{ xs: 12, md: 4 }}><TextField fullWidth type="date" label="Next Follow-up" slotProps={{ inputLabel: { shrink: true } }} value={form.next_followup_date || ""} onChange={set("next_followup_date")} /></Grid>
+            <Grid size={{ xs: 12, md: 4 }}><TextField select fullWidth label="Priority" value={form.priority || "Medium"} onChange={set("priority")}>
               {PRIORITY_OPTIONS.map((p) => <MenuItem key={p} value={p}>{p}</MenuItem>)}
             </TextField></Grid>
-            <Grid item xs={12} md={3}><TextField select fullWidth label="Status" value={form.status || "New"} onChange={set("status")} SelectProps={{ inputProps: { "data-testid": "enq-form-status" } }}>
+            <Grid size={{ xs: 12, md: 4 }}><TextField select fullWidth label="Status" value={form.status || "New"} onChange={set("status")} slotProps={{ htmlInput: { "data-testid": "enq-form-status" } }}>
               {STATUS_OPTIONS.map((s) => <MenuItem key={s} value={s}>{s}</MenuItem>)}
             </TextField></Grid>
-            <Grid item xs={12}><TextField fullWidth multiline rows={3} label="Remarks" value={form.remarks} onChange={set("remarks")} /></Grid>
+            <Grid size={{ xs: 12 }}><TextField fullWidth multiline rows={3} label="Remarks" value={form.remarks} onChange={set("remarks")} /></Grid>
           </Grid>
         </Card>
 

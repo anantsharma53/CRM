@@ -88,11 +88,11 @@ function CoursesTab() {
         <DialogTitle>{editing ? "Edit Course" : "New Course"}</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 0.5 }}>
-            <Grid item xs={12}><TextField fullWidth label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} inputProps={{ "data-testid": "course-name" }} /></Grid>
-            <Grid item xs={6}><TextField fullWidth label="Code" value={form.code || ""} onChange={(e) => setForm({ ...form, code: e.target.value })} /></Grid>
-            <Grid item xs={6}><TextField fullWidth label="Duration" value={form.duration || ""} onChange={(e) => setForm({ ...form, duration: e.target.value })} /></Grid>
-            <Grid item xs={12}><TextField fullWidth type="number" label="Fee" value={form.fee} onChange={(e) => setForm({ ...form, fee: Number(e.target.value) })} /></Grid>
-            <Grid item xs={12}><TextField fullWidth multiline rows={2} label="Description" value={form.description || ""} onChange={(e) => setForm({ ...form, description: e.target.value })} /></Grid>
+            <Grid size={{ xs: 12 }}><TextField fullWidth label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} slotProps={{ htmlInput: { "data-testid": "course-name" } }} /></Grid>
+            <Grid size={{ xs: 6 }}><TextField fullWidth label="Code" value={form.code || ""} onChange={(e) => setForm({ ...form, code: e.target.value })} /></Grid>
+            <Grid size={{ xs: 6 }}><TextField fullWidth label="Duration" value={form.duration || ""} onChange={(e) => setForm({ ...form, duration: e.target.value })} /></Grid>
+            <Grid size={{ xs: 12 }}><TextField fullWidth type="number" label="Fee" value={form.fee} onChange={(e) => setForm({ ...form, fee: Number(e.target.value) })} /></Grid>
+            <Grid size={{ xs: 12 }}><TextField fullWidth multiline rows={2} label="Description" value={form.description || ""} onChange={(e) => setForm({ ...form, description: e.target.value })} /></Grid>
           </Grid>
         </DialogContent>
         <DialogActions><Button onClick={() => setOpen(false)}>Cancel</Button><Button variant="contained" onClick={save} data-testid="course-save">Save</Button></DialogActions>
@@ -126,14 +126,14 @@ function BatchesTab() {
         <DialogTitle>{editing ? "Edit Batch" : "New Batch"}</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 0.5 }}>
-            <Grid item xs={12}><TextField fullWidth label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></Grid>
-            <Grid item xs={12}><TextField select fullWidth label="Course" value={form.course_id || ""} onChange={(e) => setForm({ ...form, course_id: e.target.value })}>
+            <Grid size={{ xs: 12 }}><TextField fullWidth label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></Grid>
+            <Grid size={{ xs: 12 }}><TextField select fullWidth label="Course" value={form.course_id || ""} onChange={(e) => setForm({ ...form, course_id: e.target.value })}>
               <MenuItem value="">-</MenuItem>{courses.map((c) => <MenuItem key={c.id} value={c.id}>{c.name}</MenuItem>)}
             </TextField></Grid>
-            <Grid item xs={6}><TextField fullWidth type="date" label="Start" InputLabelProps={{ shrink: true }} value={form.start_date || ""} onChange={(e) => setForm({ ...form, start_date: e.target.value })} /></Grid>
-            <Grid item xs={6}><TextField fullWidth type="date" label="End" InputLabelProps={{ shrink: true }} value={form.end_date || ""} onChange={(e) => setForm({ ...form, end_date: e.target.value })} /></Grid>
-            <Grid item xs={8}><TextField fullWidth label="Timing" value={form.timing || ""} onChange={(e) => setForm({ ...form, timing: e.target.value })} /></Grid>
-            <Grid item xs={4}><TextField fullWidth type="number" label="Capacity" value={form.capacity} onChange={(e) => setForm({ ...form, capacity: Number(e.target.value) })} /></Grid>
+            <Grid size={{ xs: 6 }}><TextField fullWidth type="date" label="Start" slotProps={{ inputLabel: { shrink: true } }} value={form.start_date || ""} onChange={(e) => setForm({ ...form, start_date: e.target.value })} /></Grid>
+            <Grid size={{ xs: 6 }}><TextField fullWidth type="date" label="End" slotProps={{ inputLabel: { shrink: true } }} value={form.end_date || ""} onChange={(e) => setForm({ ...form, end_date: e.target.value })} /></Grid>
+            <Grid size={{ xs: 8 }}><TextField fullWidth label="Timing" value={form.timing || ""} onChange={(e) => setForm({ ...form, timing: e.target.value })} /></Grid>
+            <Grid size={{ xs: 4 }}><TextField fullWidth type="number" label="Capacity" value={form.capacity} onChange={(e) => setForm({ ...form, capacity: Number(e.target.value) })} /></Grid>
           </Grid>
         </DialogContent>
         <DialogActions><Button onClick={() => setOpen(false)}>Cancel</Button><Button variant="contained" onClick={save} data-testid="batch-save">Save</Button></DialogActions>
@@ -196,13 +196,13 @@ function UsersTab() {
         <DialogContent>
           {err && <Typography color="error" variant="body2" sx={{ mb: 1 }}>{err}</Typography>}
           <Grid container spacing={2} sx={{ mt: 0.5 }}>
-            <Grid item xs={12} md={6}><TextField fullWidth label="Full Name" value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} /></Grid>
-            <Grid item xs={12} md={6}><TextField fullWidth label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} disabled={!!editing} /></Grid>
-            <Grid item xs={12} md={6}><TextField select fullWidth label="Role" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
+            <Grid size={{ xs: 12, md: 6 }}><TextField fullWidth label="Full Name" value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} /></Grid>
+            <Grid size={{ xs: 12, md: 6 }}><TextField fullWidth label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} disabled={!!editing} /></Grid>
+            <Grid size={{ xs: 12, md: 6 }}><TextField select fullWidth label="Role" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
               {ROLES.map((r) => <MenuItem key={r} value={r}>{r}</MenuItem>)}
             </TextField></Grid>
-            <Grid item xs={12} md={6}><TextField fullWidth label="Phone" value={form.phone || ""} onChange={(e) => setForm({ ...form, phone: e.target.value })} /></Grid>
-            <Grid item xs={12}><TextField fullWidth type="password" label={editing ? "New password (leave blank to keep)" : "Password"} value={form.password || ""} onChange={(e) => setForm({ ...form, password: e.target.value })} /></Grid>
+            <Grid size={{ xs: 12, md: 6 }}><TextField fullWidth label="Phone" value={form.phone || ""} onChange={(e) => setForm({ ...form, phone: e.target.value })} /></Grid>
+            <Grid size={{ xs: 12 }}><TextField fullWidth type="password" label={editing ? "New password (leave blank to keep)" : "Password"} value={form.password || ""} onChange={(e) => setForm({ ...form, password: e.target.value })} /></Grid>
           </Grid>
         </DialogContent>
         <DialogActions><Button onClick={() => setOpen(false)}>Cancel</Button><Button variant="contained" onClick={save} data-testid="user-save">Save</Button></DialogActions>

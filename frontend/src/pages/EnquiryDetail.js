@@ -86,31 +86,31 @@ export default function EnquiryDetail() {
       {err && <Alert severity="error" sx={{ mb: 2 }}>{err}</Alert>}
 
       <Grid container spacing={3}>
-        <Grid item xs={12} md={8}>
+        <Grid size={{ xs: 12, md: 8 }}>
           <Card sx={{ p: 3, mb: 3 }}>
             <Typography variant="h5" sx={{ mb: 2 }}>Personal & Contact</Typography>
             <Grid container spacing={2}>
-              <Grid item xs={6} md={4}><Kv k="Father" v={e.father_name} /></Grid>
-              <Grid item xs={6} md={4}><Kv k="Mother" v={e.mother_name} /></Grid>
-              <Grid item xs={6} md={4}><Kv k="Gender" v={e.gender} /></Grid>
-              <Grid item xs={6} md={4}><Kv k="DOB" v={e.dob} /></Grid>
-              <Grid item xs={6} md={4}><Kv k="Mobile" v={e.mobile} /></Grid>
-              <Grid item xs={6} md={4}><Kv k="WhatsApp" v={e.whatsapp} /></Grid>
-              <Grid item xs={12} md={6}><Kv k="Email" v={e.email} /></Grid>
-              <Grid item xs={12} md={6}><Kv k="Address" v={`${e.address || ""} ${e.city || ""} ${e.state || ""} ${e.pincode || ""}`.trim()} /></Grid>
+              <Grid size={{ xs: 6, md: 4 }}><Kv k="Father" v={e.father_name} /></Grid>
+              <Grid size={{ xs: 6, md: 4 }}><Kv k="Mother" v={e.mother_name} /></Grid>
+              <Grid size={{ xs: 6, md: 4 }}><Kv k="Gender" v={e.gender} /></Grid>
+              <Grid size={{ xs: 6, md: 4 }}><Kv k="DOB" v={e.dob} /></Grid>
+              <Grid size={{ xs: 6, md: 4 }}><Kv k="Mobile" v={e.mobile} /></Grid>
+              <Grid size={{ xs: 6, md: 4 }}><Kv k="WhatsApp" v={e.whatsapp} /></Grid>
+              <Grid size={{ xs: 12, md: 6 }}><Kv k="Email" v={e.email} /></Grid>
+              <Grid size={{ xs: 12, md: 6 }}><Kv k="Address" v={`${e.address || ""} ${e.city || ""} ${e.state || ""} ${e.pincode || ""}`.trim()} /></Grid>
             </Grid>
             <Divider sx={{ my: 2 }} />
             <Typography variant="h5" sx={{ mb: 2 }}>Academic & Course</Typography>
             <Grid container spacing={2}>
-              <Grid item xs={6} md={4}><Kv k="Qualification" v={e.qualification} /></Grid>
-              <Grid item xs={6} md={4}><Kv k="School/College" v={e.school_college} /></Grid>
-              <Grid item xs={6} md={4}><Kv k="Board" v={e.board_university} /></Grid>
-              <Grid item xs={6} md={4}><Kv k="Passing Year" v={e.passing_year} /></Grid>
-              <Grid item xs={6} md={4}><Kv k="Percentage" v={e.percentage} /></Grid>
-              <Grid item xs={6} md={4}><Kv k="Course" v={e.course_name} /></Grid>
-              <Grid item xs={6} md={4}><Kv k="Batch" v={e.batch_name} /></Grid>
-              <Grid item xs={6} md={4}><Kv k="Mode" v={e.mode} /></Grid>
-              <Grid item xs={6} md={4}><Kv k="Preferred Timing" v={e.preferred_timing} /></Grid>
+              <Grid size={{ xs: 6, md: 4 }}><Kv k="Qualification" v={e.qualification} /></Grid>
+              <Grid size={{ xs: 6, md: 4 }}><Kv k="School/College" v={e.school_college} /></Grid>
+              <Grid size={{ xs: 6, md: 4 }}><Kv k="Board" v={e.board_university} /></Grid>
+              <Grid size={{ xs: 6, md: 4 }}><Kv k="Passing Year" v={e.passing_year} /></Grid>
+              <Grid size={{ xs: 6, md: 4 }}><Kv k="Percentage" v={e.percentage} /></Grid>
+              <Grid size={{ xs: 6, md: 4 }}><Kv k="Course" v={e.course_name} /></Grid>
+              <Grid size={{ xs: 6, md: 4 }}><Kv k="Batch" v={e.batch_name} /></Grid>
+              <Grid size={{ xs: 6, md: 4 }}><Kv k="Mode" v={e.mode} /></Grid>
+              <Grid size={{ xs: 6, md: 4 }}><Kv k="Preferred Timing" v={e.preferred_timing} /></Grid>
             </Grid>
             <Divider sx={{ my: 2 }} />
             <Typography variant="h5" sx={{ mb: 2 }}>Remarks</Typography>
@@ -118,7 +118,7 @@ export default function EnquiryDetail() {
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ p: 3, mb: 3 }}>
             <Typography variant="overline" color="secondary" fontWeight={700}>Lead & Assignment</Typography>
             <Box sx={{ mt: 2 }}>
@@ -132,7 +132,7 @@ export default function EnquiryDetail() {
           </Card>
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Card>
             <Box sx={{ p: 3, display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #E2E8F0" }}>
               <Box>
@@ -171,16 +171,16 @@ export default function EnquiryDetail() {
         <DialogTitle>New Follow-up</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 0.5 }}>
-            <Grid item xs={6}><TextField fullWidth type="date" label="Date" InputLabelProps={{ shrink: true }} value={fu.date} onChange={(e) => setFu({ ...fu, date: e.target.value })} inputProps={{ "data-testid": "fu-date" }} /></Grid>
-            <Grid item xs={6}><TextField fullWidth type="time" label="Time" InputLabelProps={{ shrink: true }} value={fu.time} onChange={(e) => setFu({ ...fu, time: e.target.value })} /></Grid>
-            <Grid item xs={6}><TextField select fullWidth label="Type" value={fu.communication_type} onChange={(e) => setFu({ ...fu, communication_type: e.target.value })}>
+            <Grid size={{ xs: 6 }}><TextField fullWidth type="date" label="Date" value={fu.date} onChange={(e) => setFu({ ...fu, date: e.target.value })} slotProps={{ inputLabel: { shrink: true }, htmlInput: { "data-testid": "fu-date" } }} /></Grid>
+            <Grid size={{ xs: 6 }}><TextField fullWidth type="time" label="Time" slotProps={{ inputLabel: { shrink: true } }} value={fu.time} onChange={(e) => setFu({ ...fu, time: e.target.value })} /></Grid>
+            <Grid size={{ xs: 6 }}><TextField select fullWidth label="Type" value={fu.communication_type} onChange={(e) => setFu({ ...fu, communication_type: e.target.value })}>
               {COMM_TYPES.map((c) => <MenuItem key={c} value={c}>{c}</MenuItem>)}
             </TextField></Grid>
-            <Grid item xs={6}><TextField select fullWidth label="Update Status" value={fu.status} onChange={(e) => setFu({ ...fu, status: e.target.value })} SelectProps={{ inputProps: { "data-testid": "fu-status" } }}>
+            <Grid size={{ xs: 6 }}><TextField select fullWidth label="Update Status" value={fu.status} onChange={(e) => setFu({ ...fu, status: e.target.value })} slotProps={{ htmlInput: { "data-testid": "fu-status" } }}>
               <MenuItem value="">Keep current</MenuItem>{STATUS_OPTIONS.map((s) => <MenuItem key={s} value={s}>{s}</MenuItem>)}
             </TextField></Grid>
-            <Grid item xs={12}><TextField fullWidth multiline rows={3} label="Remarks" value={fu.remarks} onChange={(e) => setFu({ ...fu, remarks: e.target.value })} inputProps={{ "data-testid": "fu-remarks" }} /></Grid>
-            <Grid item xs={12}><TextField fullWidth type="date" label="Next Follow-up" InputLabelProps={{ shrink: true }} value={fu.next_followup_date} onChange={(e) => setFu({ ...fu, next_followup_date: e.target.value })} /></Grid>
+            <Grid size={{ xs: 12 }}><TextField fullWidth multiline rows={3} label="Remarks" value={fu.remarks} onChange={(e) => setFu({ ...fu, remarks: e.target.value })} slotProps={{ htmlInput: { "data-testid": "fu-remarks" } }} /></Grid>
+            <Grid size={{ xs: 12 }}><TextField fullWidth type="date" label="Next Follow-up" slotProps={{ inputLabel: { shrink: true } }} value={fu.next_followup_date} onChange={(e) => setFu({ ...fu, next_followup_date: e.target.value })} /></Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
@@ -194,10 +194,10 @@ export default function EnquiryDetail() {
         <DialogContent>
           <Alert severity="info" sx={{ mb: 2 }}>Student details will be preserved and enquiry marked as Admitted.</Alert>
           <Grid container spacing={2}>
-            <Grid item xs={12}><TextField fullWidth label="Admission Number (optional, auto)" value={adm.admission_no} onChange={(e) => setAdm({ ...adm, admission_no: e.target.value })} /></Grid>
-            <Grid item xs={6}><TextField fullWidth type="number" label="Total Fee" value={adm.total_fee} onChange={(e) => setAdm({ ...adm, total_fee: e.target.value })} /></Grid>
-            <Grid item xs={6}><TextField fullWidth type="number" label="Fee Paid" value={adm.fee_paid} onChange={(e) => setAdm({ ...adm, fee_paid: e.target.value })} /></Grid>
-            <Grid item xs={12}><TextField fullWidth multiline rows={2} label="Remarks" value={adm.remarks} onChange={(e) => setAdm({ ...adm, remarks: e.target.value })} /></Grid>
+            <Grid size={{ xs: 12 }}><TextField fullWidth label="Admission Number (optional, auto)" value={adm.admission_no} onChange={(e) => setAdm({ ...adm, admission_no: e.target.value })} /></Grid>
+            <Grid size={{ xs: 6 }}><TextField fullWidth type="number" label="Total Fee" value={adm.total_fee} onChange={(e) => setAdm({ ...adm, total_fee: e.target.value })} /></Grid>
+            <Grid size={{ xs: 6 }}><TextField fullWidth type="number" label="Fee Paid" value={adm.fee_paid} onChange={(e) => setAdm({ ...adm, fee_paid: e.target.value })} /></Grid>
+            <Grid size={{ xs: 12 }}><TextField fullWidth multiline rows={2} label="Remarks" value={adm.remarks} onChange={(e) => setAdm({ ...adm, remarks: e.target.value })} /></Grid>
           </Grid>
         </DialogContent>
         <DialogActions>

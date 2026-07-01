@@ -69,7 +69,7 @@ export default function AppLayout() {
                 }}
               >
                 <ListItemIcon sx={{ color: "inherit", minWidth: 38 }}>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.label} primaryTypographyProps={{ fontWeight: 500, fontSize: "0.92rem" }} />
+                <ListItemText primary={item.label} slotProps={{ primary: { fontWeight: 500, fontSize: "0.92rem" } }} />
               </ListItemButton>
             </ListItem>
           );

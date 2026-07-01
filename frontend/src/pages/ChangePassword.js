@@ -27,8 +27,8 @@ export default function ChangePassword() {
         {err && <Alert severity="error" sx={{ mb: 2 }}>{err}</Alert>}
         <form onSubmit={submit}>
           <Stack spacing={2}>
-            <TextField label="Current password" type="password" required value={oldPw} onChange={(e) => setOld(e.target.value)} inputProps={{ "data-testid": "cp-old" }} />
-            <TextField label="New password" type="password" required value={newPw} onChange={(e) => setNew(e.target.value)} inputProps={{ "data-testid": "cp-new" }} />
+            <TextField label="Current password" type="password" required value={oldPw} onChange={(e) => setOld(e.target.value)} slotProps={{ htmlInput: { "data-testid": "cp-old" } }} />
+            <TextField label="New password" type="password" required value={newPw} onChange={(e) => setNew(e.target.value)} slotProps={{ htmlInput: { "data-testid": "cp-new" } }} />
             <Button type="submit" variant="contained" data-testid="cp-submit">Update password</Button>
           </Stack>
         </form>
