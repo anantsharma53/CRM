@@ -39,7 +39,7 @@ export default function Admissions() {
             {rows.map((a) => (
               <TableRow key={a.id} hover data-testid={`adm-row-${a.id}`}>
                 <TableCell><Chip size="small" label={a.admission_no} sx={{ bgcolor: "#132A13", color: "#fff" }} /></TableCell>
-                <TableCell fontWeight={600}>{a.student_name}</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>{a.student_name}</TableCell>
                 <TableCell>{a.course_name || "—"}</TableCell>
                 <TableCell>{a.batch_name || "—"}</TableCell>
                 <TableCell>{a.admission_date}</TableCell>
