@@ -43,9 +43,9 @@ export default function AppLayout() {
 
   const drawer = (
     <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <Box sx={{ px: 3, py: 3, borderBottom: "1px solid #1E2A24", display: "flex", alignItems: "center", gap: 1.5 }}>
-        <Box sx={{ width: 44, height: 44, borderRadius: 1.5, bgcolor: "#000", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", flexShrink: 0 }}>
-          <img src="/brand/microtech-logo.png" alt="Microtech" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+      <Box sx={{ px: 3, py: 2.5, borderBottom: "1px solid #1E2A24", display: "flex", alignItems: "center", gap: 1.5 }}>
+        <Box sx={{ width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <img src="/brand/microtech-logo-tight.png" alt="Microtech" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", filter: "brightness(0) invert(1)" }} />
         </Box>
         <Box>
           <Typography variant="h6" sx={{ color: "#fff", letterSpacing: "-0.01em", lineHeight: 1.1, fontSize: "1.05rem" }} data-testid="sidebar-brand">

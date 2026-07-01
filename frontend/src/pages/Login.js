@@ -39,8 +39,8 @@ export default function Login() {
         <Box sx={{ position: "absolute", inset: 0, bgcolor: "rgba(11,16,14,0.55)" }} />
         <Box sx={{ position: "relative", p: 6, color: "#fff", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Box sx={{ width: 60, height: 60, borderRadius: 1.5, bgcolor: "#000", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <img src="/brand/microtech-logo.png" alt="Microtech" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            <Box sx={{ width: 90, height: 40, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <img src="/brand/microtech-logo-tight.png" alt="Microtech" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", filter: "brightness(0) invert(1)" }} />
             </Box>
             <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: "-0.02em" }}>Microtech<span style={{ color: "#D26B58" }}> Computers</span></Typography>
           </Box>
