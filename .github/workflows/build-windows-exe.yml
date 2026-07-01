@@ -1,10 +1,5 @@
 name: Build MicrotechCRM binaries (Windows + Linux + macOS)
 
-# When to run:
-#  - Every push to main
-#  - Every PR into main (build only, no release)
-#  - Every tag like v1.0.0 (build + attach all binaries to GitHub Release)
-#  - Manual "Run workflow" button in the Actions tab
 on:
   push:
     branches: [main]
@@ -36,25 +31,28 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
+          # cache disabled here — enabled below manually so it works even without a lockfile
           cache: pip
-          cache-dependency-path: backend/requirements.txt
 
-      - name: Set up Node.js 20
-        uses: actions/setup-node@v4
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v5
         with:
-          node-version: "20"
+          node-version: "22"
+          # NOTE: no cache-dependency-path — setup-node@v5 auto-detects any lockfile.
+          # Falls back gracefully if yarn.lock isn't committed yet.
           cache: yarn
-          cache-dependency-path: frontend/yarn.lock
 
       - name: Install frontend dependencies
         working-directory: frontend
-        run: yarn install --frozen-lockfile
+        # No --frozen-lockfile: we want this to also work the very first time
+        # (before yarn.lock is committed to the repo).
+        run: yarn install --network-timeout 300000
 
       - name: Build React frontend (offline mode -> relative /api)
         working-directory: frontend
@@ -81,13 +79,13 @@ jobs:
           if (!(Test-Path $exe)) { throw "exe not found" }
           $env:MTC_PORT = "8765"
           $proc = Start-Process -FilePath $exe -PassThru -WindowStyle Hidden
-          Start-Sleep -Seconds 10
+          Start-Sleep -Seconds 12
           try {
             $health = Invoke-RestMethod http://127.0.0.1:8765/api/health
             Write-Host "Health OK: $($health.status)"
+            $body = @{ email='admin@mtcedu.co.in'; password='Admin@123' } | ConvertTo-Json
             $login = Invoke-RestMethod -Method Post http://127.0.0.1:8765/api/auth/login `
-              -Body (@{email='admin@mtcedu.co.in';password='Admin@123'} | ConvertTo-Json) `
-              -ContentType 'application/json'
+              -Body $body -ContentType 'application/json'
             if (-not $login.access_token) { throw "login failed" }
             Write-Host "Login OK for $($login.user.email) [$($login.user.role)]"
           } finally { Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue }
@@ -101,7 +99,7 @@ jobs:
           test -x "$bin" || { echo "binary missing"; exit 1; }
           MTC_PORT=8765 "$bin" > /tmp/smoke.log 2>&1 &
           pid=$!
-          sleep 10
+          sleep 12
           curl -fsS http://127.0.0.1:8765/api/health || { cat /tmp/smoke.log; kill $pid; exit 1; }
           echo ""
           tok=$(curl -fsS -X POST http://127.0.0.1:8765/api/auth/login \
@@ -112,8 +110,6 @@ jobs:
           kill $pid || true
 
       # ---------- Optional: Windows code-signing ----------
-      # Only runs if the two secrets are set: WINDOWS_CERT_PFX_BASE64 + WINDOWS_CERT_PASSWORD.
-      # See .github/README.md for how to add a code-signing cert.
       - name: Sign MicrotechCRM.exe (only if secrets configured)
         if: matrix.os == 'windows-latest' && env.WIN_CERT_PFX != ''
         env:
@@ -123,9 +119,8 @@ jobs:
         run: |
           $pfxBytes = [Convert]::FromBase64String($env:WIN_CERT_PFX)
           [IO.File]::WriteAllBytes("cert.pfx", $pfxBytes)
-          & "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22621.0/x64/signtool.exe" sign `
-            /f cert.pfx /p $env:WIN_CERT_PWD /tr http://timestamp.digicert.com /td sha256 /fd sha256 `
-            dist/MicrotechCRM.exe
+          $signtool = Get-ChildItem "C:/Program Files (x86)/Windows Kits/10/bin" -Recurse -Filter signtool.exe | Where-Object { $_.FullName -match "x64" } | Select-Object -First 1
+          & $signtool.FullName sign /f cert.pfx /p $env:WIN_CERT_PWD /tr http://timestamp.digicert.com /td sha256 /fd sha256 dist/MicrotechCRM.exe
           Remove-Item cert.pfx -Force
 
       # ---------- Rename + upload ----------
@@ -142,6 +137,7 @@ jobs:
           name: MicrotechCRM-${{ matrix.name }}-${{ github.sha }}
           path: dist/${{ matrix.asset }}
           retention-days: 30
+          if-no-files-found: error
 
       - name: Attach to GitHub Release (only on tags)
         if: startsWith(github.ref, 'refs/tags/')
