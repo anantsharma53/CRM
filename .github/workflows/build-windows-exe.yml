@@ -1,0 +1,93 @@
+name: Build MicrotechCRM.exe (Windows)
+
+# When to run:
+#  - Every push to main
+#  - Every PR into main (build only, no release)
+#  - Every tag like v1.0.0 (build + attach to GitHub Release)
+#  - Manual "Run workflow" button in the Actions tab
+on:
+  push:
+    branches: [main]
+    tags: ["v*.*.*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-exe:
+    name: Build Windows .exe
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: yarn
+          cache-dependency-path: frontend/yarn.lock
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: yarn install --frozen-lockfile
+
+      - name: Build React frontend (offline mode -> relative /api)
+        working-directory: frontend
+        env:
+          REACT_APP_BACKEND_URL: ""
+          CI: "false"        # treat warnings as warnings, not errors
+        run: yarn build
+
+      - name: Install backend + PyInstaller
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+          pip install pyinstaller uvicorn
+
+      - name: Build MicrotechCRM.exe with PyInstaller
+        run: pyinstaller --clean MicrotechCRM.spec
+
+      - name: Smoke-test the built exe (start + curl + kill)
+        shell: pwsh
+        run: |
+          $exe = "dist/MicrotechCRM.exe"
+          if (!(Test-Path $exe)) { throw "exe not found" }
+          $env:MTC_PORT = "8765"
+          $proc = Start-Process -FilePath $exe -PassThru -WindowStyle Hidden
+          Start-Sleep -Seconds 8
+          try {
+            $health = Invoke-RestMethod http://127.0.0.1:8765/api/health
+            Write-Host "Health OK: $($health.status)"
+            $login = Invoke-RestMethod -Method Post http://127.0.0.1:8765/api/auth/login `
+              -Body (@{email='admin@mtcedu.co.in';password='Admin@123'} | ConvertTo-Json) `
+              -ContentType 'application/json'
+            if (-not $login.access_token) { throw "login failed" }
+            Write-Host "Login OK for $($login.user.email) [$($login.user.role)]"
+          } finally {
+            Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
+          }
+
+      - name: Upload MicrotechCRM.exe as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MicrotechCRM-${{ github.sha }}
+          path: dist/MicrotechCRM.exe
+          retention-days: 30
+
+      - name: Attach exe to GitHub Release (only on tags)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/MicrotechCRM.exe
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
