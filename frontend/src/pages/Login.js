@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import { formatApiError } from "../services/api";
 
 export default function Login() {
-  const [email, setEmail] = useState("admin@institute.com");
+  const [email, setEmail] = useState("admin@mtcedu.co.in");
   const [password, setPassword] = useState("Admin@123");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -38,15 +38,15 @@ export default function Login() {
       >
         <Box sx={{ position: "absolute", inset: 0, bgcolor: "rgba(11,16,14,0.55)" }} />
         <Box sx={{ position: "relative", p: 6, color: "#fff", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-          <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: "-0.02em" }}>Ivy<span style={{ color: "#D26B58" }}>CRM</span></Typography>
+          <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: "-0.02em" }}>Microtech<span style={{ color: "#D26B58" }}> Computers</span></Typography>
           <Box>
             <Typography variant="h2" sx={{ mb: 2, letterSpacing: "-0.02em" }}>Where enquiries<br/>become admissions.</Typography>
             <Typography variant="body1" sx={{ opacity: 0.85, maxWidth: 460 }}>
-              A modern lead management workspace built for education institutes — reception, counsellors, and admins in one place.
+              A modern lead management workspace for Microtech Computers — reception, counsellors, and admins in one place.
             </Typography>
           </Box>
           <Typography variant="caption" sx={{ opacity: 0.6, letterSpacing: "0.15em", textTransform: "uppercase" }}>
-            Est. 2026 · Institute Enquiry System
+            mtcedu.co.in · Institute Enquiry System
           </Typography>
         </Box>
       </Box>
@@ -56,7 +56,7 @@ export default function Login() {
           <Typography variant="overline" color="text.secondary">Welcome back</Typography>
           <Typography variant="h3" sx={{ mb: 1 }}>Sign in</Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            Use your institute credentials to continue.
+            Use your Microtech Computers credentials to continue.
           </Typography>
           {error && <Alert severity="error" sx={{ mb: 2 }} data-testid="login-error">{error}</Alert>}
           <form onSubmit={submit}>
@@ -100,11 +100,11 @@ export default function Login() {
           <Box sx={{ mt: 4, p: 2, bgcolor: "#F8F9FA", borderRadius: 1, border: "1px solid #E2E8F0" }}>
             <Typography variant="caption" fontWeight={700} color="text.secondary" sx={{ letterSpacing: "0.08em" }}>DEMO ACCOUNTS · pw: Admin@123</Typography>
             <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0.5, mt: 1, fontSize: 12 }}>
-              <span>superadmin@institute.com</span><span style={{ color: "#5C6B64" }}>Super Admin</span>
-              <span>admin@institute.com</span><span style={{ color: "#5C6B64" }}>Admin</span>
-              <span>reception@institute.com</span><span style={{ color: "#5C6B64" }}>Reception</span>
-              <span>counsellor@institute.com</span><span style={{ color: "#5C6B64" }}>Counsellor</span>
-              <span>faculty@institute.com</span><span style={{ color: "#5C6B64" }}>Faculty</span>
+              <span>superadmin@mtcedu.co.in</span><span style={{ color: "#5C6B64" }}>Super Admin</span>
+              <span>admin@mtcedu.co.in</span><span style={{ color: "#5C6B64" }}>Admin</span>
+              <span>reception@mtcedu.co.in</span><span style={{ color: "#5C6B64" }}>Reception</span>
+              <span>counsellor@mtcedu.co.in</span><span style={{ color: "#5C6B64" }}>Counsellor</span>
+              <span>faculty@mtcedu.co.in</span><span style={{ color: "#5C6B64" }}>Faculty</span>
             </Box>
           </Box>
         </Card>

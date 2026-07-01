@@ -38,7 +38,7 @@ logger = logging.getLogger("crm")
 
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="Institute Enquiry CRM")
+app = FastAPI(title="Microtech Computers · Institute Enquiry CRM")
 api = APIRouter(prefix="/api")
 
 app.add_middleware(
@@ -627,6 +627,40 @@ def health():
 app.include_router(api)
 
 
+# ---------- Offline / packaged mode: serve React build ----------
+try:
+    from fastapi.staticfiles import StaticFiles
+    from fastapi.responses import FileResponse
+
+    # In PyInstaller onefile, files ship under sys._MEIPASS
+    import sys as _sys
+    _base = Path(getattr(_sys, "_MEIPASS", str(ROOT_DIR)))
+    _exec_dir = Path(_sys.executable).parent if getattr(_sys, "frozen", False) else ROOT_DIR.parent
+    _static_candidates = [
+        _base / "static",
+        _exec_dir / "static",
+        ROOT_DIR / "static",
+        ROOT_DIR.parent / "static",
+        ROOT_DIR.parent / "frontend" / "build",
+    ]
+    STATIC_DIR = next((p for p in _static_candidates if p.exists() and (p / "index.html").exists()), None)
+    if STATIC_DIR is not None:
+        logger.info(f"Serving frontend build from: {STATIC_DIR}")
+        app.mount("/static", StaticFiles(directory=str(STATIC_DIR / "static")), name="static")
+
+        @app.get("/{full_path:path}")
+        def spa_fallback(full_path: str):
+            # Never intercept API
+            if full_path.startswith("api/") or full_path == "api":
+                raise HTTPException(status_code=404)
+            candidate = STATIC_DIR / full_path
+            if full_path and candidate.exists() and candidate.is_file():
+                return FileResponse(str(candidate))
+            return FileResponse(str(STATIC_DIR / "index.html"))
+except Exception as _e:
+    logger.info(f"Static serving disabled: {_e}")
+
+
 # ---------- Seeder ----------
 
 def seed_defaults():
@@ -634,11 +668,11 @@ def seed_defaults():
     db = SessionLocal()
     try:
         seed_users = [
-            ("superadmin@institute.com", "Super Admin", "super_admin", "Admin@123"),
-            ("admin@institute.com", "Institute Admin", "admin", "Admin@123"),
-            ("reception@institute.com", "Priya Reception", "reception", "Admin@123"),
-            ("counsellor@institute.com", "Rahul Counsellor", "counsellor", "Admin@123"),
-            ("faculty@institute.com", "Neha Faculty", "faculty", "Admin@123"),
+            ("superadmin@mtcedu.co.in", "Super Admin", "super_admin", "Admin@123"),
+            ("admin@mtcedu.co.in", "Microtech Admin", "admin", "Admin@123"),
+            ("reception@mtcedu.co.in", "Priya Reception", "reception", "Admin@123"),
+            ("counsellor@mtcedu.co.in", "Rahul Counsellor", "counsellor", "Admin@123"),
+            ("faculty@mtcedu.co.in", "Neha Faculty", "faculty", "Admin@123"),
         ]
         for email, name, role, pw in seed_users:
             u = db.query(User).filter(User.email == email).first()

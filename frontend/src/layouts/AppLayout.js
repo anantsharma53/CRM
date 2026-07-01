@@ -45,10 +45,10 @@ export default function AppLayout() {
     <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <Box sx={{ px: 3, py: 3, borderBottom: "1px solid #1E2A24" }}>
         <Typography variant="h5" sx={{ color: "#fff", letterSpacing: "-0.02em" }} data-testid="sidebar-brand">
-          Ivy<span style={{ color: "#D26B58" }}>CRM</span>
+          Microtech<span style={{ color: "#D26B58" }}> Computers</span>
         </Typography>
         <Typography variant="caption" sx={{ color: "#A0AAB2", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-          Institute Enquiries
+          mtcedu.co.in · Enquiry CRM
         </Typography>
       </Box>
       <List sx={{ flex: 1, px: 1.5, py: 2 }}>
@@ -76,7 +76,7 @@ export default function AppLayout() {
         })}
       </List>
       <Box sx={{ p: 2, borderTop: "1px solid #1E2A24" }}>
-        <Typography variant="caption" sx={{ color: "#5C6B64" }}>© {new Date().getFullYear()} IvyCRM</Typography>
+        <Typography variant="caption" sx={{ color: "#5C6B64" }}>© {new Date().getFullYear()} Microtech Computers · mtcedu.co.in</Typography>
       </Box>
     </Box>
   );
